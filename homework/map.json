@@ -1,6 +1,6 @@
 {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-    "title": "COVID-19 Active Cases (10 Oct 2020)",
+    "title": "Countries Arriving to Australia in 2021",
     "width": 800,
     "height": 400,
     "projection": {"type": "equalEarth"},
@@ -16,21 +16,20 @@
             "url": "https://raw.githubusercontent.com/hungryegg0/3179-A2/refs/heads/main/Arrivals2021.csv"
           },
           "key": "Country",
-          "fields": ["Active"]
+          "fields": ["Arrivals in 2021"]
         }
       },
-      {"calculate": "datum.Active + 0.1", "as": "Active Cases"}
+      {"calculate": "datum.Arrivals in 2021", "as": "Arrivals in 2021"}
     ],
     "mark": {"type": "geoshape"},
     "encoding": {
       "color": {
-        "field": "Active Cases",
-        "type": "quantitative",
-        "scale": {"type": "log"}
+        "field": "Arrivals in 2021",
+        "type": "quantitative"
       },
       "tooltip": [
         {"field": "properties.NAME", "type": "nominal", "title": "Country"},
-        {"field": "Active", "type": "quantitative"}
+        {"field": "Arrivals in 2021", "type": "quantitative"}
       ]
     }
   }
