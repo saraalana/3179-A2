@@ -4,94 +4,179 @@
   <script src="https://cdn.jsdelivr.net/npm/vega@5.22.1"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.2.0"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.20.8"></script>
-</head>
-<body>
-  <div id="vis"/>
-  <script>
-    const spec = {
-  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "title": "Country of Citizenship of Australian Arrivals in 2021",
-  "width": 1000,
-  "height": 500,
-  "data": {
-    "url": "https://raw.githubusercontent.com/saraalana/3179-A2/refs/heads/main/homework/ne_110m_admin_0_countries2.json",
-    "format": {"type": "topojson", "feature": "ne_110m_admin_0_countries"}
-  },
-  "projection": {"type": "equalEarth"},
-  "layer": [
-    {
-      "data": {
-        "url": "https://raw.githubusercontent.com/FIT3179/Vega-Lite/main/7_others/oceans.topojson",
-        "format": {"type": "topojson", "feature": "oceans"}
-      },
-      "mark": {"type": "geoshape", "fill": "skyblue"}
-    },
-    {
-      "data": {
-        "url": "https://raw.githubusercontent.com/FIT3179/Vega-Lite/main/2_symbol_map/js/WorldMapWithGraticules.topojson",
-        "format": {"type": "topojson", "feature": "ne_110m_graticules_30"}
-      },
-      "mark": {"type": "geoshape", "fill": null, "stroke": "lightgray"}
-    },
-    {
-      "transform": [
-        {
-          "lookup": "properties.NAME",
-          "from": {
-            "data": {
-              "url": "https://raw.githubusercontent.com/hungryegg0/3179-A2/refs/heads/main/Arrivals2021.csv"
-            },
-            "key": "Country",
-            "fields": ["Arrivals in 2021"]
-          }
-        },
-        
-      ],
-      "mark": {"type": "geoshape", "stroke": "white"},
-      "encoding": {
-        "color": {
-          "field": "Arrivals in 2021",
-          "type": "quantitative",
-          "scale": {
-            "type": "threshold",
-            "domain": [0, 10, 100, 1000, 5000, 10000, 50000, 100000, 200000, 300000],
-            "range": ["#fcfbfd", "#feebe2", "#fde0dd", "#fcc5c0", "#fa9fb5", "#f768a1", "#dd3497", "#ae017e", "#7a0177", "#49006a"]
-          }
-        }
-      }
-    },
-    {
-      "transform": [{
-          "lookup": "properties.NAME",
-          "from": {
-            "data": {
-              "url": "https://raw.githubusercontent.com/saraalana/3179-A2/refs/heads/main/homework/countryInfo.csv"
-            },
-            "key": "name",
-            "fields": ["latitude", "longitude"]
-          }
-        }
-      ],
-      "mark": {"type": "text"},
-      "encoding": {
-        "longitude": {"field": "longitude", "type": "quantitative"},
-        "latitude": {"field": "latitude", "type": "quantitative"},
-        "text": {"field": "properties.NAME", "type": "nominal"},
-        "opacity": {
-          "condition": {
-            "test": "datum['properties.NAME'] == 'Canada' || datum['properties.NAME'] == 'Brazil' || datum['properties.NAME'] == 'Australia' || datum['properties.NAME'] == 'New Zealand' ||  datum['properties.NAME'] == 'India' ||  datum['properties.NAME'] == 'United States of America' ||  datum['properties.NAME'] == '3920' ||  datum['properties.NAME'] == 'United Kingdom' ||  datum['properties.NAME'] == 'Philippines'",
-            "value": 1
-          },
-          "value": 0
-        }
-      }
-    }
-  ],
-  
-  "config": {}
-};
+  <style>
+    /* html page spacing and style*/
+    #page {display: flex; justify-content: space-around; align-items: center;}
+    #visualisation1 {width: 500px; height: 400px;}
+    #visualisation2 {width: 400px; height: 350px;}
+    #filterModule {margin: 20px;}
 
-    vegaEmbed("#vis", spec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+    /*code to limit height of check box and create scroll*/
+    .checkbox-page {max-height: 200px; overflow-y: auto;}
+  </style>
+</head>
+
+<body>
+    <!-- page layout -->
+  <div id="page">
+    <div id="visualisation1"></div>
+    <div id="visualisation2"></div>
+  </div>
+
+  <div id="filterModule">
+    <label>Choose Countries to Display</label>
+    <div id="checkboxContainer" class="checkbox-page"></div>
+    <button onclick="updateBarChart()">Update</button>
+  </div>
+
+  <script>
+    const popularCountries = ['Australia', 'United States', 'Canada', 'United Kingdom', 'India', 'China', 'New Zealand', 'Philippines'];
+    let countries = [];
+
+    function fillCountriesCheckboxes(data) {
+      const page = document.getElementById("checkboxContainer");
+
+      data.forEach(row => {
+        if (!countries.includes(row['Country'])) {
+          countries.push(row['Country']);
+
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.value = row['Country'];
+          checkbox.id = `checkbox-${row['Country']}`;
+          if (popularCountries.includes(row['Country'])) {
+            checkbox.checked = true;
+          }
+
+          const label = document.createElement("label");
+          label.htmlFor = `checkbox-${row['Country']}`;
+          label.textContent = row['Country'];
+
+          page.appendChild(checkbox);
+          page.appendChild(label);
+          page.appendChild(document.createElement("br")); 
+        }
+      });
+    }
+
+    function retrieveCountriesSelected() {
+      return Array.from(document.querySelectorAll('#checkboxContainer input[type="checkbox"]:checked')).map(checkbox => checkbox.value);
+    }
+
+    function updateBarChart() {
+      const selectedCountries = retrieveCountriesSelected();
+      const barChartSpec = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+        "title": "Number of Arrivals by Selected Countries in 2021",
+        "data": {
+          "url": "https://raw.githubusercontent.com/hungryegg0/3179-A2/refs/heads/main/Arrivals2021.csv",
+          "format": {"type": "csv"}
+        },
+        "transform": [
+          {"filter": `indexof([${selectedCountries.map(c => `'${c}'`).join(',')}], datum['Country']) >= 0`}
+        ],
+        "mark": "bar",
+        "width": 300,
+        "height": 300,
+        "encoding": {
+          "x": {
+            "field": "Country",
+            "type": "nominal",
+            "sort": "-y",
+            "title": "Country of Citizenship"
+          },
+          "y": {
+            "field": "Arrivals in 2021",
+            "type": "quantitative",
+            "title": "Number of Arrivals"
+          },
+          "color": {
+            "field": "Arrivals in 2021",
+            "type": "quantitative",
+            "scale": {
+              "scheme": "greens"
+            }
+          },
+          "tooltip": [
+            {"field": "Country", "type": "nominal", "title": "Country"},
+            {"field": "Arrivals in 2021", "type": "quantitative", "title": "Number of Arrivals"}
+          ]
+        },
+        "config": {
+          "axis": {
+            "labelFontSize": 12,
+            "titleFontSize": 14
+          },
+          "bar": {
+            "cornerRadiusTopLeft": 4,
+            "cornerRadiusTopRight": 4
+          }
+        }
+      };
+      vegaEmbed("#visualisation2", barChartSpec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+    }
+
+    const mapSpec = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "title": "Country of Citizenship of Australian Arrivals in 2021",
+      "width": 500,
+      "height": 400,
+      "data": {
+        "url": "https://raw.githubusercontent.com/saraalana/3179-A2/refs/heads/main/homework/ne_110m_admin_0_countries2.json",
+        "format": {"type": "topojson", "feature": "ne_110m_admin_0_countries"}
+      },
+      "projection": {"type": "equalEarth"},
+      "layer": [
+        {
+          "data": {
+            "url": "https://raw.githubusercontent.com/saraalana/3179-A2/refs/heads/main/homework/oceans.topojson",
+            "format": {"type": "topojson", "feature": "oceans"}
+          },
+          "mark": {"type": "geoshape", "fill": "skyblue"}
+        },
+        {
+          "data": {
+            "url": "https://raw.githubusercontent.com/saraalana/3179-A2/refs/heads/main/homework/WorldMapWithGraticules.topojson",
+            "format": {"type": "topojson", "feature": "ne_110m_graticules_30"}
+          },
+          "mark": {"type": "geoshape", "fill": null, "stroke": "lightgray"}
+        },
+        {
+          "transform": [
+            {
+              "lookup": "properties.NAME",
+              "from": {
+                "data": {
+                  "url": "https://raw.githubusercontent.com/hungryegg0/3179-A2/refs/heads/main/Arrivals2021.csv"
+                },
+                "key": "Country",
+                "fields": ["Arrivals in 2021"]
+              }
+            }
+          ],
+          "mark": {"type": "geoshape", "stroke": "white"},
+          "encoding": {
+            "color": {
+              "field": "Arrivals in 2021",
+              "type": "quantitative",
+              "scale": {
+                "type": "threshold",
+                "domain": [0, 10, 100, 1000, 5000, 10000, 50000, 100000, 200000, 300000],
+                "range": ["#e5f5e0", "#c7e9c0", "#a1d99b", "#74c476", "#41ab5d", "#238b45", "#006d2c", "#00441b"]
+              }
+            }
+          }
+        }
+      ]
+    };
+    vegaEmbed("#visualisation1", mapSpec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+    vega.loader().load("https://raw.githubusercontent.com/hungryegg0/3179-A2/refs/heads/main/Arrivals2021.csv").then(csv => {
+      const rows = d3.csvParse(csv);
+      fillCountriesCheckboxes(rows);  
+      updateBarChart();                
+    });
+    
   </script>
+  <script src="https://d3js.org/d3.v6.min.js"></script> <!-- needed to parse CSV-->
 </body>
 </html>
