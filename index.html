@@ -1,28 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <h1 style="text-align: center;">Arrivals into Australia</h1>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arrivals into Australia</title>
   <script src="https://cdn.jsdelivr.net/npm/vega@5.22.1"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.2.0"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.20.8"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <style>
-    /* html page spacing and style*/
     body {
       font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 2em;
+      color: #333;
     }
 
     .container {
-      display: flex; 
-      justify-content: space-around; 
-      align-items: flex-start; 
+      display: flex;
+      justify-content: center;
       flex-wrap: wrap;
+      gap: 30px;
+      padding: 20px;
     }
 
     #visualisation1, #visualisation2, #histogram {
-      margin: 20px; 
-      border: 1px solid #ccc; 
-      border-radius: 5px; 
-      padding: 10px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
     #visualisation1 {
@@ -36,41 +50,74 @@
     }
 
     #histogram {
-      width: 600px; 
+      width: 600px;
       height: 450px;
     }
 
     #filterModule {
-      margin: 0; /* Remove margin for the filter module */
+      text-align: center;
+      margin: 40px 0;
     }
 
-    /*code to limit height of check box and create scroll*/
+    label {
+      font-weight: bold;
+      margin-bottom: 10px;
+      display: block;
+    }
+
     .checkbox-page {
       max-height: 200px;
+      width: 300px;
+      margin: 0 auto;
       overflow-y: auto;
-      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #fff;
     }
+
+    .checkbox-page input {
+      margin-right: 10px;
+    }
+
+    .checkbox-page label {
+      display: inline-block;
+      margin-right: 15px;
+      font-size: 0.9em;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin-top: 20px;
+      cursor: pointer;
+      font-size: 1em;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
   </style>
 </head>
 
 <body>
+  <h1>Arrivals into Australia</h1>
 
   <div class="container">
-
     <div id="visualisation1"></div>
-
     <div id="visualisation2"></div>
-
     <div id="histogram"></div>
-
   </div>
 
   <div id="filterModule">
-
     <label>Choose Countries to Display</label>
     <div id="checkboxContainer" class="checkbox-page"></div>
     <button onclick="updateBarChart()">Update</button>
-
   </div>
 
   <script>
@@ -118,7 +165,7 @@
           "format": { "type": "csv" }
         },
         "transform": [
-          { "filter": { "field": "Country", "oneOf": selectedCountries } }  
+          { "filter": { "field": "Country", "oneOf": selectedCountries } }
         ],
         "width": 300,
         "height": 300,
@@ -265,7 +312,7 @@
               "scale": {"domain": [-10000000, 10000000]},
               "axis": {"format": "s"}
             },
-            "color": { "value": "#41ab5d" }, // Changed color to match greens
+            "color": { "value": "#41ab5d" },
             "tooltip": [
               {"field": "Country", "type": "nominal", "title": "Country"},
               {"field": "Arrivals in 2017", "type": "quantitative", "title": "Arrivals in 2017"}
@@ -287,7 +334,7 @@
               "scale": {"domain": [-10000000, 10000000]},
               "axis": {"format": "s"}
             },
-            "color": { "value": "#238b45" }, // Changed color to match greens
+            "color": { "value": "#238b45" },
             "tooltip": [
               {"field": "Country", "type": "nominal", "title": "Country"},
               {"field": "Arrivals in 2021", "type": "quantitative", "title": "Arrivals in 2021"}
@@ -310,6 +357,6 @@
     });
 
   </script>
-  <script src="https://d3js.org/d3.v6.min.js"></script> <!-- needed to parse CSV-->
+  <script src="https://d3js.org/d3.v6.min.js"></script>
 </body>
 </html>
