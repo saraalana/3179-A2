@@ -18,7 +18,12 @@
       flex-wrap: wrap;
     }
 
-    #visualisation1, #visualisation2, #histogram {margin: 20px; border: 1px solid #ccc; border-radius: 5px; padding: 10px;}
+    #visualisation1, #visualisation2, #histogram {
+      margin: 20px; 
+      border: 1px solid #ccc; 
+      border-radius: 5px; 
+      padding: 10px;
+    }
 
     #visualisation1 {
       width: 500px;
@@ -36,7 +41,7 @@
     }
 
     #filterModule {
-      margin: 20px;
+      margin: 0; /* Remove margin for the filter module */
     }
 
     /*code to limit height of check box and create scroll*/
@@ -49,8 +54,6 @@
 </head>
 
 <body>
-
-  <h1>Australian Arrivals in 2017 and 2021</h1>
 
   <div class="container">
 
@@ -106,7 +109,6 @@
 
     function updateBarChart() {
       const selectedCountries = retrieveCountriesSelected();
-
 
       const barChartSpec = {
         "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
@@ -212,95 +214,94 @@
         }
       ]
     };
+
     const histogramSpec = {
-  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "description": "A histogram comparing arrivals into Australia in 2017 and 2021 using a population pyramid style.",
-  "data": {
-    "url": "https://raw.githubusercontent.com/saraalana/3179-A2/refs/heads/main/data/ArrivalsIntoAustralia2021.csv",
-    "format": {"type": "csv"}
-  },
-  "transform": [
-    {
-      "filter": "datum.Country == 'Australia' || datum.Country == 'United States' || datum.Country == 'Canada' || datum.Country == 'United Kingdom' || datum.Country == 'India' || datum.Country == 'China' || datum.Country == 'New Zealand' || datum.Country == 'Philippines'"
-    },
-    {
-      "lookup": "Country",
-      "from": {
-        "data": {
-          "url": "https://raw.githubusercontent.com/saraalana/3179-A2/refs/heads/main/data/ArrivalsIntoAustraliaIn2017.csv",
-          "format": {"type": "csv"}
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "description": "A histogram comparing arrivals into Australia in 2017 and 2021 using a population pyramid style.",
+      "data": {
+        "url": "https://raw.githubusercontent.com/saraalana/3179-A2/refs/heads/main/data/ArrivalsIntoAustralia2021.csv",
+        "format": {"type": "csv"}
+      },
+      "transform": [
+        {
+          "filter": "datum.Country == 'Australia' || datum.Country == 'United States' || datum.Country == 'Canada' || datum.Country == 'United Kingdom' || datum.Country == 'India' || datum.Country == 'China' || datum.Country == 'New Zealand' || datum.Country == 'Philippines'"
         },
-        "key": "Country",
-        "fields": ["Arrivals in 2017"]
+        {
+          "lookup": "Country",
+          "from": {
+            "data": {
+              "url": "https://raw.githubusercontent.com/saraalana/3179-A2/refs/heads/main/data/ArrivalsIntoAustraliaIn2017.csv",
+              "format": {"type": "csv"}
+            },
+            "key": "Country",
+            "fields": ["Arrivals in 2017"]
+          }
+        },
+        {
+          "calculate": "'2021 Arrivals'", "as": "Year"
+        },
+        {
+          "calculate": "-datum['Arrivals in 2017']", "as": "Signed_Arrivals_2017"
+        },
+        {
+          "calculate": "datum['Arrivals in 2021']", "as": "Signed_Arrivals_2021"
+        }
+      ],
+      "width": 400,
+      "height": 300,
+      "layer": [
+        {
+          "mark": "bar",
+          "encoding": {
+            "y": {
+              "field": "Country",
+              "sort": {"field": "Signed_Arrivals_2017", "order": "descending"},
+              "axis": {"title": "Country"}
+            },
+            "x": {
+              "field": "Signed_Arrivals_2017",
+              "aggregate": "sum",
+              "title": "Arrivals in 2017",
+              "scale": {"domain": [-10000000, 10000000]},
+              "axis": {"format": "s"}
+            },
+            "color": { "value": "#41ab5d" }, // Changed color to match greens
+            "tooltip": [
+              {"field": "Country", "type": "nominal", "title": "Country"},
+              {"field": "Arrivals in 2017", "type": "quantitative", "title": "Arrivals in 2017"}
+            ]
+          }
+        },
+        {
+          "mark": "bar",
+          "encoding": {
+            "y": {
+              "field": "Country",
+              "sort": {"field": "Signed_Arrivals_2021", "order": "descending"},
+              "axis": null
+            },
+            "x": {
+              "field": "Signed_Arrivals_2021",
+              "aggregate": "sum",
+              "title": "Arrivals in 2021",
+              "scale": {"domain": [-10000000, 10000000]},
+              "axis": {"format": "s"}
+            },
+            "color": { "value": "#238b45" }, // Changed color to match greens
+            "tooltip": [
+              {"field": "Country", "type": "nominal", "title": "Country"},
+              {"field": "Arrivals in 2021", "type": "quantitative", "title": "Arrivals in 2021"}
+            ]
+          }
+        }
+      ],
+      "config": {
+        "view": {"stroke": null},
+        "axis": {"grid": false}
       }
-    },
-    {
-      "calculate": "'2021 Arrivals'", "as": "Year"
-    },
-    {
-      "calculate": "-datum['Arrivals in 2017']", "as": "Signed_Arrivals_2017"
-    },
-    {
-      "calculate": "datum['Arrivals in 2021']", "as": "Signed_Arrivals_2021"
-    }
-  ],
-  "width": 400,
-  "height": 300,
-  "layer": [
-    {
-      "mark": "bar",
-      "encoding": {
-        "y": {
-          "field": "Country",
-          "sort": {"field": "Signed_Arrivals_2017", "order": "descending"},
-          "axis": {"title": "Country"}
-        },
-        "x": {
-          "field": "Signed_Arrivals_2017",
-          "aggregate": "sum",
-          "title": "Arrivals in 2017",
-          "scale": {"domain": [-10000000, 10000000]},
-          "axis": {"format": "s"}
-        },
-        "color": {"value": "#ca8861"},
-        "tooltip": [
-          {"field": "Country", "type": "nominal", "title": "Country"},
-          {"field": "Arrivals in 2017", "type": "quantitative", "title": "Arrivals in 2017"}
-        ]
-      }
-    },
-    {
-      "mark": "bar",
-      "encoding": {
-        "y": {
-          "field": "Country",
-          "sort": {"field": "Signed_Arrivals_2021", "order": "descending"},
-          "axis": null
-        },
-        "x": {
-          "field": "Signed_Arrivals_2021",
-          "aggregate": "sum",
-          "title": "Arrivals in 2021",
-          "scale": {"domain": [-10000000, 10000000]},
+    };
 
-          "axis": {"format": "s"}
-          
-        },
-        "color": {"value": "#675193"},
-        "tooltip": [
-          {"field": "Country", "type": "nominal", "title": "Country"},
-          {"field": "Arrivals in 2021", "type": "quantitative", "title": "Arrivals in 2021"}
-        ]
-      }
-    }
-  ],
-  "config": {
-    "view": {"stroke": null},
-    "axis": {"grid": false}
-  }
-};
     vegaEmbed("#histogram", histogramSpec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
-
     vegaEmbed("#visualisation1", mapSpec, { mode: "vega-lite" }).then(console.log).catch(console.warn);
     vega.loader().load("https://raw.githubusercontent.com/saraalana/3179-A2/refs/heads/main/data/ArrivalsIntoAustralia2021.csv").then(csv => {
       const rows = d3.csvParse(csv);
@@ -311,5 +312,4 @@
   </script>
   <script src="https://d3js.org/d3.v6.min.js"></script> <!-- needed to parse CSV-->
 </body>
-
 </html>
