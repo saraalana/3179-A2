@@ -6,105 +6,42 @@
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.2.0"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.20.8"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f9f9f9;
-    }
-
-    h1 {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 2em;
-      color: #333;
-    }
-
-    .container {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 30px;
-      padding: 20px;
-    }
-
-    #visualisation1, #visualisation2, #histogram {
-      background-color: #fff;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    #visualisation1 {
-      width: 500px;
-      height: 400px;
-    }
-
-    #visualisation2 {
-      width: 400px;
-      height: 350px;
-    }
-
-    #histogram {
-      width: 600px;
-      height: 450px;
-    }
-
-    #filterModule {
-      text-align: center;
-      margin: 40px 0;
-    }
-
-    label {
-      font-weight: bold;
-      margin-bottom: 10px;
-      display: block;
-    }
-
-    .checkbox-page {
-      max-height: 200px;
-      width: 300px;
-      margin: 0 auto;
-      overflow-y: auto;
-      border: 1px solid #ccc;
-      padding: 10px;
-      border-radius: 5px;
-      background-color: #fff;
-    }
-
-    .checkbox-page input {
-      margin-right: 10px;
-    }
-
-    .checkbox-page label {
-      display: inline-block;
-      margin-right: 15px;
-      font-size: 0.9em;
-    }
-
-    button {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      margin-top: 20px;
-      cursor: pointer;
-      font-size: 1em;
-      border-radius: 5px;
-      transition: background-color 0.3s ease;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-  </style>
 </head>
 
 <body>
-  <h1>Arrivals into Australia</h1>
+
+  <div class="centered-title">
+    <h1>Arrivals into Australia</h1>
+</div>
+
+<div class="centered-container">
+  <div id="split-container">
+      <div class="split">
+              <p>The Australian tourism industry is gradually recovering from the COVID-19 pandemic that brought global travel to an unprecedented standstill. International tourism fell sharply in early 2020 and has only slowly recovered since restrictions were lifted in the first half of this year. </p>
+      </div>
+      <div class="split">
+          <h3>Arrivals to Australia in 2017 vs 2021</h3>
+          <div id="histogram"></div>
+      </div>
+  </div>
+</div>
+
+<div class = "centered-title">
+  <h2>Arrivals by Country of Citizenship in 2017 vs 2021</h2>
+</div>
+
+<div class="centered-container">
+  <div id="split-container">
+    <div class="split">
+      <h3>Arrivals to Australia in 2017</h3>
+      <div id="map2017"></div>
+    </div>
+    <div class="split">
+        <h3>Arrivals to Australia in 2021</h3>
+        <div id="map2021"></div>
+    </div>
+</div>
+</div>
 
   <div class="container">
     <div id="visualisation1"></div>
@@ -201,150 +138,6 @@
       };
       vegaEmbed("#visualisation2", barChartSpec, { mode: "vega-lite" }).then(console.log).catch(console.warn);
     }
-
-    const mapSpec = {
-      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-      "title": "Country of Citizenship of Australian Arrivals in 2021",
-      "width": 500,
-      "height": 400,
-      "data": {
-        "url": "https://raw.githubusercontent.com/saraalana/3179-A2/refs/heads/main/js/ne_110m_admin_0_countries2.json",
-        "format": { "type": "topojson", "feature": "ne_110m_admin_0_countries" }
-      },
-      "projection": { "type": "equalEarth" },
-      "layer": [
-        {
-          "data": {
-            "url": "https://raw.githubusercontent.com/saraalana/3179-A2/refs/heads/main/js/oceans.topojson",
-            "format": { "type": "topojson", "feature": "oceans" }
-          },
-          "mark": { "type": "geoshape", "fill": "skyblue" }
-        },
-        {
-          "data": {
-            "url": "https://raw.githubusercontent.com/saraalana/3179-A2/refs/heads/main/js/WorldMapWithGraticules.topojson",
-            "format": { "type": "topojson", "feature": "ne_110m_graticules_30" }
-          },
-          "mark": { "type": "geoshape", "fill": null, "stroke": "lightgray" }
-        },
-        {
-          "transform": [
-            {
-              "lookup": "properties.NAME",
-              "from": {
-                "data": {
-                  "url": "https://raw.githubusercontent.com/saraalana/3179-A2/refs/heads/main/data/ArrivalsIntoAustralia2021.csv"
-                },
-                "key": "Country",
-                "fields": ["Arrivals in 2021"]
-              }
-            }
-          ],
-          "mark": { "type": "geoshape", "stroke": "white" },
-          "encoding": {
-            "color": {
-              "field": "Arrivals in 2021",
-              "type": "quantitative",
-              "scale": {
-                "type": "threshold",
-                "domain": [0, 10, 100, 1000, 5000, 10000, 50000, 100000, 200000, 300000],
-                "range": ["#e5f5e0", "#c7e9c0", "#a1d99b", "#74c476", "#41ab5d", "#238b45", "#006d2c", "#00441b"]
-              }
-            },
-            "tooltip": [
-              {"field": "properties.NAME", "type": "nominal", "title": "Country"},
-              {"field": "Arrivals in 2021", "type": "quantitative", "title": "Arrivals in 2021"}
-            ]
-          }
-        }
-      ]
-    };
-
-    const histogramSpec = {
-      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-      "description": "A histogram comparing arrivals into Australia in 2017 and 2021 using a population pyramid style.",
-      "data": {
-        "url": "https://raw.githubusercontent.com/saraalana/3179-A2/refs/heads/main/data/ArrivalsIntoAustralia2021.csv",
-        "format": {"type": "csv"}
-      },
-      "transform": [
-        {
-          "filter": "datum.Country == 'Australia' || datum.Country == 'United States' || datum.Country == 'Canada' || datum.Country == 'United Kingdom' || datum.Country == 'India' || datum.Country == 'China' || datum.Country == 'New Zealand' || datum.Country == 'Philippines'"
-        },
-        {
-          "lookup": "Country",
-          "from": {
-            "data": {
-              "url": "https://raw.githubusercontent.com/saraalana/3179-A2/refs/heads/main/data/ArrivalsIntoAustraliaIn2017.csv",
-              "format": {"type": "csv"}
-            },
-            "key": "Country",
-            "fields": ["Arrivals in 2017"]
-          }
-        },
-        {
-          "calculate": "'2021 Arrivals'", "as": "Year"
-        },
-        {
-          "calculate": "-datum['Arrivals in 2017']", "as": "Signed_Arrivals_2017"
-        },
-        {
-          "calculate": "datum['Arrivals in 2021']", "as": "Signed_Arrivals_2021"
-        }
-      ],
-      "width": 400,
-      "height": 300,
-      "layer": [
-        {
-          "mark": "bar",
-          "encoding": {
-            "y": {
-              "field": "Country",
-              "sort": {"field": "Signed_Arrivals_2017", "order": "descending"},
-              "axis": {"title": "Country"}
-            },
-            "x": {
-              "field": "Signed_Arrivals_2017",
-              "aggregate": "sum",
-              "title": "Arrivals in 2017",
-              "scale": {"domain": [-10000000, 10000000]},
-              "axis": {"format": "s"}
-            },
-            "color": { "value": "#41ab5d" },
-            "tooltip": [
-              {"field": "Country", "type": "nominal", "title": "Country"},
-              {"field": "Arrivals in 2017", "type": "quantitative", "title": "Arrivals in 2017"}
-            ]
-          }
-        },
-        {
-          "mark": "bar",
-          "encoding": {
-            "y": {
-              "field": "Country",
-              "sort": {"field": "Signed_Arrivals_2021", "order": "descending"},
-              "axis": null
-            },
-            "x": {
-              "field": "Signed_Arrivals_2021",
-              "aggregate": "sum",
-              "title": "Arrivals in 2021",
-              "scale": {"domain": [-10000000, 10000000]},
-              "axis": {"format": "s"}
-            },
-            "color": { "value": "#238b45" },
-            "tooltip": [
-              {"field": "Country", "type": "nominal", "title": "Country"},
-              {"field": "Arrivals in 2021", "type": "quantitative", "title": "Arrivals in 2021"}
-            ]
-          }
-        }
-      ],
-      "config": {
-        "view": {"stroke": null},
-        "axis": {"grid": false}
-      }
-    };
 
     vegaEmbed("#histogram", histogramSpec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
     vegaEmbed("#visualisation1", mapSpec, { mode: "vega-lite" }).then(console.log).catch(console.warn);
