@@ -5,7 +5,9 @@
   <script src="https://cdn.jsdelivr.net/npm/vega@5.22.1"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.2.0"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.20.8"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/page.js"></script>
+
 </head>
 
 <body>
@@ -56,89 +58,7 @@
   </div>
 
   <script>
-    const popularCountries = ['Australia', 'United States', 'Canada', 'United Kingdom', 'India', 'China', 'New Zealand', 'Philippines'];
-    let countries = [];
-
-    function fillCountriesCheckboxes(data) {
-      const page = document.getElementById("checkboxContainer");
-
-      data.forEach(row => {
-        if (!countries.includes(row['Country'])) {
-          countries.push(row['Country']);
-
-          const checkbox = document.createElement("input");
-          checkbox.type = "checkbox";
-          checkbox.value = row['Country'];
-          checkbox.id = `checkbox-${row['Country']}`;
-          if (popularCountries.includes(row['Country'])) {
-            checkbox.checked = true;
-          }
-
-          const label = document.createElement("label");
-          label.htmlFor = `checkbox-${row['Country']}`;
-          label.textContent = row['Country'];
-
-          page.appendChild(checkbox);
-          page.appendChild(label);
-          page.appendChild(document.createElement("br"));
-        }
-      });
-    }
-
-    function retrieveCountriesSelected() {
-      return Array.from(document.querySelectorAll('#checkboxContainer input[type="checkbox"]:checked')).map(checkbox => checkbox.value);
-    }
-
-    function updateBarChart() {
-      const selectedCountries = retrieveCountriesSelected();
-
-      const barChartSpec = {
-        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-        "title": "Number of Arrivals by Selected Countries in 2021",
-        "data": {
-          "url": "https://raw.githubusercontent.com/saraalana/3179-A2/refs/heads/main/data/ArrivalsIntoAustralia2021.csv",
-          "format": { "type": "csv" }
-        },
-        "transform": [
-          { "filter": { "field": "Country", "oneOf": selectedCountries } }
-        ],
-        "width": 300,
-        "height": 300,
-        "layer": [
-          {
-            "mark": "bar",
-            "encoding": {
-              "x": {
-                "field": "Country",
-                "type": "nominal",
-                "sort": "-y",
-                "title": "Country of Citizenship"
-              },
-              "y": {
-                "field": "Arrivals in 2021",
-                "type": "quantitative",
-                "title": "Number of Arrivals"
-              },
-              "color": {
-                "field": "Arrivals in 2021",
-                "type": "quantitative",
-                "scale": { "scheme": "greens" }
-              },
-              "tooltip": [
-                { "field": "Country", "type": "nominal", "title": "Country" },
-                { "field": "Arrivals in 2021", "type": "quantitative", "title": "Number of Arrivals" }
-              ]
-            }
-          }
-        ],
-        "config": {
-          "axis": { "labelFontSize": 12, "titleFontSize": 14 },
-          "bar": { "cornerRadiusTopLeft": 4, "cornerRadiusTopRight": 4 }
-        }
-      };
       vegaEmbed("#visualisation2", barChartSpec, { mode: "vega-lite" }).then(console.log).catch(console.warn);
-    }
-
     vegaEmbed("#histogram", histogramSpec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
     vegaEmbed("#visualisation1", mapSpec, { mode: "vega-lite" }).then(console.log).catch(console.warn);
     vega.loader().load("https://raw.githubusercontent.com/saraalana/3179-A2/refs/heads/main/data/ArrivalsIntoAustralia2021.csv").then(csv => {
@@ -148,6 +68,6 @@
     });
 
   </script>
-  <script src="https://d3js.org/d3.v6.min.js"></script>  <!-- needed to parse CSV-->
+  <script src="https://d3js.org/d3.v6.min.js"></script>
 </body>
 </html>

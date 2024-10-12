@@ -1,8 +1,8 @@
 {
     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
     "title": "Country of Citizenship of Australian Arrivals in 2021",
-    "width": 500,
-    "height": 400,
+    "width": 400,
+    "height": 200,
     "data": {
       "url": "https://raw.githubusercontent.com/saraalana/3179-A2/refs/heads/main/js/ne_110m_admin_0_countries2.json",
       "format": { "type": "topojson", "feature": "ne_110m_admin_0_countries" }
@@ -43,7 +43,7 @@
             "type": "quantitative",
             "scale": {
               "type": "threshold",
-              "domain": [0, 10, 100, 1000, 5000, 10000, 50000, 100000, 200000, 300000],
+              "domain": [0, 100, 1000, 5000, 10000, 100000, 200000, 300000, 500000, 800000],
               "range": ["#e5f5e0", "#c7e9c0", "#a1d99b", "#74c476", "#41ab5d", "#238b45", "#006d2c", "#00441b"]
             }
           },

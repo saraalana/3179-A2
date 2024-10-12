@@ -1,0 +1,59 @@
+body {background-color: rgba(1, 50, 32);}
+
+h1 {
+    color: #013220;
+    margin: 10px 0;
+    font-size: 2.5em;
+    text-align: center;
+}
+
+body {
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    color: #444444;
+    font-size: 16pt;
+    background-color: #FAFAFA;
+}
+
+#map2017,#map2021,#histogram,#barChart {
+    margin: 30px auto;
+    max-width: 1000px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(1, 50, 32, 0.3);
+}
+
+#split-container {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    margin: 50px auto;
+    max-width: 1000px;
+}
+
+.centered-title {
+    text-align: center;
+    background-color: rgba(1, 50, 32, 0.1);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+}
+.centered-container{
+    width: 90%;
+    background-color: rgba(1, 50, 32, 0.1);
+    padding: 22px;
+    border-radius: 10px;
+    text-align: center;
+    margin: 22px auto; 
+}
+.split {
+    flex: 1;
+    padding: 20px;
+    background-color: rgba(1, 50, 32, 0.1);
+    border-radius: 8px;
+    margin: 0 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+
+
