@@ -2,6 +2,84 @@
 <html>
 <head>
 <style>
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 2em;
+      color: #333;
+    }
+
+    #visualisation1, #visualisation2, #histogram {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    #visualisation1 {
+      width: 500px;
+      height: 400px;
+    }
+
+    #visualisation2 {
+      width: 400px;
+      height: 350px;
+    }
+
+    #histogram {
+      width: 600px;
+      height: 450px;
+    }
+
+    #filterModule {
+      text-align: center;
+      margin: 40px 0;
+    }
+
+    label {
+      font-weight: bold;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .checkbox-page {
+      max-height: 200px;
+      width: 300px;
+      margin: 0 auto;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #fff;
+    }
+
+    .checkbox-page input {
+      margin-right: 10px;
+    }
+
+    .checkbox-page label {
+      display: inline-block;
+      margin-right: 15px;
+      font-size: 0.9em;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin-top: 20px;
+      cursor: pointer;
+      font-size: 1em;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
 .item1 { grid-area: header; }
 .item2 { grid-area: main; }
 .item3 { grid-area: right; }
@@ -38,10 +116,10 @@
 
     <div class="grid-container">
         <div class="item1">Header</div>
-        <div class="visualisation1"></div>
-        <div class="histogram"></div>  
-        <div class="visualisation2"></div>
-        <div class="filterModule">
+        <div class="#visualisation1"></div>
+        <div class="#histogram"></div>  
+        <div class="#visualisation2"></div>
+        <div class="#filterModule">
             <label>Choose Countries to Display</label>
             <div id="checkboxContainer" class="checkbox-page"></div>
             <button onclick="updateBarChart()">Update</button>
