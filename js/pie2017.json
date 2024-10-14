@@ -1,0 +1,36 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "description": "Pie Chart with percentage_tooltip",
+    "data": {
+        "url": "https://raw.githubusercontent.com/saraalana/3179-A2/refs/heads/main/data/ArrivalsIntoAustraliaIn2017.csv",
+        "format": { "type": "csv" }
+    },
+    "transform": [
+      {
+        "filter": {
+          "field": "Country",
+          "oneOf": [
+            "United States of America",
+            "United Kingdom",
+            "India",
+            "China",
+            "Japan",
+            "Philippines",
+            "Indonesia",
+            "Canada"
+          ]
+        }
+      }
+    ],
+    "mark": {"type": "arc", "tooltip": true},
+    "encoding": {
+      "theta": {"field": "Arrivals in 2017", "type": "quantitative", "stack": "normalize"},
+      "color": {
+        "field": "Country",
+        "type": "nominal",
+        "scale": {
+          "range": ["#006400", "#228B22", "#32CD32", "#7CFC00", "#ADFF2F", "#9ACD32", "#66CDAA", "#98FB98", "#8FBC8F", "#2E8B57"]
+        }
+      }
+    }
+  }
