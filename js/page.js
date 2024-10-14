@@ -9,3 +9,9 @@ vegaEmbed("#map2021", map2021, { "actions": false }).then(function (result) { })
 
 var histogram = "js/histogram.json";
 vegaEmbed("#histogram", histogram, { "actions": false }).then(function (result) { }).catch(console.error);
+
+var pie2017 = "js/pie2017.json";
+vegaEmbed("#pie2017", pie2017, { "actions": false }).then(function (result) { }).catch(console.error);
+
+var pie2021 = "js/pie2021.json";
+vegaEmbed("#pie2021", pie2021, { "actions": false }).then(function (result) { }).catch(console.error);

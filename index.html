@@ -35,7 +35,7 @@
 </div>
 
 <div class = "centered-title">
-  <h2>Arrivals by Country of Citizenship in 2017 vs 2021</h2>
+  <h2>Mapped Arrivals by Country of Citizenship in 2017 vs 2021</h2>
 </div>
 
 <div class="centered-container">
@@ -51,29 +51,23 @@
 </div>
 </div>
 
-  <div class="container">
-    <div id="visualisation1"></div>
-    <div id="visualisation2"></div>
-    <div id="histogram"></div>
-  </div>
+<div class = "centered-title">
+  <h2>Arrivals by Country of Citizenship in 2017 vs 2021</h2>
+</div>
 
-  <div id="filterModule">
-    <label>Choose Countries to Display</label>
-    <div id="checkboxContainer" class="checkbox-page"></div>
-    <button onclick="updateBarChart()">Update</button>
-  </div>
+<div class="centered-container">
+  <div id="split-container">
+    <div class="split">
+      <h3>Arrivals to Australia in 2017</h3>
+      <div id="pie2017"></div>
+    </div>
+    <div class="split">
+        <h3>Arrivals to Australia in 2021</h3>
+        <div id="pie2021"></div>
+    </div>
+</div>
+</div>
 
-  <script>
-      vegaEmbed("#visualisation2", barChartSpec, { mode: "vega-lite" }).then(console.log).catch(console.warn);
-    vegaEmbed("#histogram", histogramSpec, {mode: "vega-lite"}).then(console.log).catch(console.warn);
-    vegaEmbed("#visualisation1", mapSpec, { mode: "vega-lite" }).then(console.log).catch(console.warn);
-    vega.loader().load("https://raw.githubusercontent.com/saraalana/3179-A2/refs/heads/main/data/ArrivalsIntoAustralia2021.csv").then(csv => {
-      const rows = d3.csvParse(csv);
-      fillCountriesCheckboxes(rows);
-      updateBarChart();
-    });
-
-  </script>
   <script src="https://d3js.org/d3.v6.min.js"></script>
 </body>
 </html>
